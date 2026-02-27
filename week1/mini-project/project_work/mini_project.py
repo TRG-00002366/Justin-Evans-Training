@@ -1,15 +1,68 @@
 from pyspark import SparkContext
 import re
-
+import os
 sc = SparkContext("local[*]", "Sentence Collector")
+book_rdd = None
+if os.path.exists("../sherlock-homes-book.txt"):
+    book_rdd = sc.textFile("../sherlock-homes-book.txt")
+print("-"*(60))
 
-book_rdd = sc.textFile("../sherlock-homes-book.txt")
-
+#O6 directory check
+if os.path.exists("../sherlock-hofjifejit.txt"):
+    bad_book_rdd = sc.textFile("../sherlock-hofjifejit.txt")
 
 
 
 def remove_punctuation(line):
     return re.sub(r"[^\s\w]", "", line)
+
+print("-"*(60))
+
+#T1 Stuff
+print("Task 1")
+book_in_lowercase = book_rdd \
+    .map(lambda line: line.lower()) \
+    .map(remove_punctuation)
+
+print(f"Book in lowercase with no punctuation: {book_in_lowercase.take(50)}")
+
+print("-"*(60))
+#O2 Stuff
+print("O2")
+
+
+empty_counter = sc.accumulator(0)
+
+def empty_check(line):
+    if(len(line) == 0):
+        empty_counter.add(1)
+    return line
+
+book_in_lowercase.map(empty_check).collect()
+
+print(f"Number of empty lines in book: {empty_counter.value}")
+
+print("-"*(60))
+#T2 Stuff
+print("Task 2")
+word_counter = sc.accumulator(0)
+
+def word_splitting(line):
+    word_counter.add(1)
+    return line.split()
+
+
+tokenized_book = book_rdd.flatMap(word_splitting)
+
+#tokenized_book.textFile()
+tokenized_book.collect()
+print(f"Total word count {word_counter.value}")
+
+# This here takes the word count and saves in a file
+with open("word_count.txt", "w") as file:
+    file.write(f"Total word count {word_counter.value}")
+
+print(f"Words Tokenized: {tokenized_book.take(50)}")
 
 
 
@@ -111,7 +164,7 @@ print("-"*(60))
 
 
 #Start of T7
-print("Task 7, 8, and 10")
+print("Task 7, 8, 10, and O7")
 
 
 unique_word_counter = sc.accumulator(0)
@@ -138,6 +191,7 @@ result = unique_words.collect()
 print(f"Top 10 words: {unique_words.take(10)}")
 print(f"Number of unique words: {unique_word_counter.value}")
 print(f"Avg word length: {total_word_size.value / unique_word_counter.value}")
+
 
 
 
@@ -235,9 +289,33 @@ print("-"*(60))
 char_frequency = broken_by_periods \
     .map(lambda line: line.lower()) \
     .map(remove_punctuation) \
-    .flatMap(lambda line: line.split()) 
-    # .map(lambda letter: (letter, 1)) \
-    # .reduceByKey(lambda letter1, letter2: letter1 + letter2) \
-    # .sortBy(lambda letter: letter[0], ascending=False)
+    .flatMap(lambda line: line.split()) \
+    .flatMap(lambda word: list(word)) \
+    .filter(lambda letter: not letter.isnumeric()) \
+    .map(lambda letter: (letter, 1)) \
+    .reduceByKey(lambda letter1, letter2: letter1 + letter2) \
+    .sortBy(lambda letter: letter[1], ascending=False)
 
 print(f"Character Frequencies: {char_frequency.collect()}")
+
+print("-"*(60))
+
+#End of O4
+
+
+#Start of O5
+
+grouped_by_letter = broken_by_periods \
+    .map(lambda line: line.lower()) \
+    .map(remove_punctuation) \
+    .flatMap(lambda line: line.split()) \
+    .map(lambda word: (word[0], word)) \
+    .reduceByKey(lambda word1, word2: word1 + " " + word2) \
+    .map(lambda words: (words[0], words[1].split())) \
+    .filter(lambda words: words[0] == "z") 
+
+print(f"Words Grouped by Letter: {grouped_by_letter.collect()}")
+
+
+print("-"*(60))
+#End of O5

@@ -1,0 +1,138 @@
+=== Exercise: Aggregations ===
+
+Sales Data:
++-------+-----------+-------+------+-----------+
+|  month|   category|product|amount|salesperson|
++-------+-----------+-------+------+-----------+
+|2023-01|Electronics| Laptop|  1200|      Alice|
+|2023-01|Electronics|  Phone|   800|        Bob|
+|2023-01|Electronics| Tablet|   500|      Alice|
+|2023-01|   Clothing| Jacket|   150|    Charlie|
+|2023-01|   Clothing|  Shoes|   100|      Diana|
+|2023-02|Electronics| Laptop|  1300|        Eve|
+|2023-02|Electronics|  Phone|   850|      Alice|
+|2023-02|   Clothing| Jacket|   175|        Bob|
+|2023-02|   Clothing|  Pants|    80|    Charlie|
+|2023-03|Electronics| Laptop|  1100|      Frank|
+|2023-03|Electronics|  Phone|   750|      Grace|
+|2023-03|   Clothing|  Shoes|   120|      Alice|
++-------+-----------+-------+------+-----------+
+
+
+--- Task 1: Simple Aggregations ---
++-----------+---------+-------------+-------------+
+|Total Sales|Avg Sales|Minimum Sales|Maximum Sales|
++-----------+---------+-------------+-------------+
+|       7125|   593.75|           80|         1300|
++-----------+---------+-------------+-------------+
+
++----------------------+
+|Number of transactions|
++----------------------+
+|                    12|
++----------------------+
+
++-----------------+
+|Unique Categories|
++-----------------+
+|                2|
++-----------------+
+
+
+--- Task 2: GroupBy Single Aggregation ---
++-----------+-----------------+
+|   category|Sales By Category|
++-----------+-----------------+
+|Electronics|             6500|
+|   Clothing|              625|
++-----------+-----------------+
+
++-------+----------------------+
+|  month|Average Sales by Month|
++-------+----------------------+
+|2023-01|                 550.0|
+|2023-02|                601.25|
+|2023-03|     656.6666666666666|
++-------+----------------------+
+
++-----------+-------------------------------------+
+|salesperson|Number of Transactions by Salesperson|
++-----------+-------------------------------------+
+|      Alice|                                    4|
+|        Bob|                                    2|
+|    Charlie|                                    2|
+|      Diana|                                    1|
+|        Eve|                                    1|
+|      Frank|                                    1|
+|      Grace|                                    1|
++-----------+-------------------------------------+
+
+
+--- Task 3: GroupBy Multiple Aggregations ---
++-----------+------------------------------+-----------+-----------------+------------+
+|   category|Number of Transactions by Dept|Total Sales|        Avg Sales|Maximum Sale|
++-----------+------------------------------+-----------+-----------------+------------+
+|Electronics|                             7|       6500|928.5714285714286|        1300|
+|   Clothing|                             5|        625|            125.0|         175|
++-----------+------------------------------+-----------+-----------------+------------+
+
++-----------+----------------------------------+--------------------------+---------------------+
+|salesperson|Num of Transactions by Salesperson|Total Sales by Salesperson|Total Unique Products|
++-----------+----------------------------------+--------------------------+---------------------+
+|      Grace|                                 1|                       750|                    1|
+|      Diana|                                 1|                       100|                    1|
+|    Charlie|                                 2|                       230|                    2|
+|        Bob|                                 2|                       975|                    2|
+|      Alice|                                 4|                      2670|                    4|
+|        Eve|                                 1|                      1300|                    1|
+|      Frank|                                 1|                      1100|                    1|
++-----------+----------------------------------+--------------------------+---------------------+
+
+
+--- Task 4: Multi-Column GroupBy ---
++-------+-----------+---------------------------------+
+|  month|   category|Total Sales by Category and Month|
++-------+-----------+---------------------------------+
+|2023-01|Electronics|                             2500|
+|2023-01|   Clothing|                              250|
+|2023-02|Electronics|                             2150|
+|2023-02|   Clothing|                              255|
+|2023-03|Electronics|                             1850|
+|2023-03|   Clothing|                              120|
++-------+-----------+---------------------------------+
+
++-------+---------------+
+|  month|top_salesperson|
++-------+---------------+
+|2023-03|           1100|
+|2023-02|           1300|
+|2023-01|           1700|
++-------+---------------+
+
+
+--- Task 5: Filtering After Aggregation ---
++-----------+--------+
+|   category|dept_sum|
++-----------+--------+
+|Electronics|    6500|
++-----------+--------+
+
++-----------+-----------------+
+|salesperson|transaction_count|
++-----------+-----------------+
+|      Alice|                4|
++-----------+-----------------+
+
++-------+-----------+-----------------+
+|  month|   category|        avg_sales|
++-------+-----------+-----------------+
+|2023-01|Electronics|833.3333333333334|
+|2023-02|Electronics|           1075.0|
+|2023-03|Electronics|            925.0|
++-------+-----------+-----------------+
+
+
+--- Challenge: Business Questions ---
+Department with the highest everage transaction value is Electronics
+Top salesperson is Alice
+Month with most diverse sales is 2023-01
