@@ -64,13 +64,13 @@ departments = spark.createDataFrame([
 # inner_result.show()
 
 # # 2. Outer Join -- 
-# # 2-A. Left - Keeps all from left 
-# left_result = employees.join(
-#     departments,
-#     employees.dept_id == departments.dept_id,
-#     "left"
-# )
-# left_result.show()
+# 2-A. Left - Keeps all from left 
+left_result = employees.join(
+    departments,
+    employees.dept_id == departments.dept_id,
+    "left"
+).drop(departments.dept_id)
+left_result.show()
 
 
 # #2-B. Right - Keeps all from right
@@ -98,21 +98,26 @@ departments = spark.createDataFrame([
 # cross_result = hours.crossJoin(minutes).show(300)
 
 # SEMI Join -- shows where the left table has a matching value in the right table, it does not show columns from right table
-semi_result = employees.join(
-    departments,
-    employees.dept_id == departments.dept_id,
-    "semi"
-)
-semi_result.show()
+# semi_result = employees.join(
+#     departments,
+#     employees.dept_id == departments.dept_id,
+#     "semi"
+# )
+# semi_result.show()
 
 
-#ANTI Join results where the left table does not have a matching value, does not show values in right table
-anti_result = employees.join(
-    departments,
-    employees.dept_id == departments.dept_id,
-    "anti"
-)
-anti_result.show()
+# #ANTI Join results where the left table does not have a matching value, does not show values in right table
+# anti_result = employees.join(
+#     departments,
+#     employees.dept_id == departments.dept_id,
+#     "anti"
+# )
+# anti_result.show()
+
+
+df1 = spark.createDataFrame([(1,), (2,), (3,)], ["Numbers"])
+df2 = spark.createDataFrame([(4,),(3,),(2,)], ["Numbers"])
+df1.intersect(df2).show()
 
 
 
