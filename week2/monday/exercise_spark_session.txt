@@ -1,0 +1,28 @@
+=== Task 1: Basic SparkSession ===
+Spark Version: 4.0.2
+Spark Parallelism: 22
+App ID: local-1772556236276
++------+---+-----+
+|  name|age|state|
++------+---+-----+
+|  Todd| 24|   NC|
+| Henry| 27|   ND|
+|Barney| 32|   CA|
+|  Jane| 34|   VA|
+|Justin| 22|   NC|
++------+---+-----+
+
+
+=== Task 2: Configuration ===
+Shuffle partitions: 200
+App id: local-1772556236276
+App name: MyFirstSparkSQLApp
+App name: This has not been set
+
+=== Task 3: getOrCreate() Behavior ===
+spark app name: MyFirstSparkSQLApp
+spark2 app name: MyFirstSparkSQLApp
+Both spark sessions are the same: True
+
+=== Task 4: Cleanup ===
+This executes if session has been stopped already

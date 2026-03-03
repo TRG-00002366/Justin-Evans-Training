@@ -64,15 +64,18 @@ print(f"Shuffle partitions: {spark.conf.get("spark.sql.shuffle.partitions")}")  
 
 
 # TODO 2b: Print at least 3 other configuration values
-# Some options: spark.driver.memory, spark.executor.memory, spark.sql.adaptive.enabled
-# print(f"Driver Memory Allocated: {spark.driver.memory}")
-# print(f"Executor Memory Allocated: {spark.memory.memory}")
-# print(f"Adaptive enabled: {spark.sql.adaptive.enabled}")
+# # Some options: spark.driver.memory, spark.executor.memory, spark.sql.adaptive.enabled
+#print(f"Executor Heartbeat Interval: {spark.conf.get("spark.executor.memory", "default_value_if_not_set")}")
+print(f"App id: {spark.conf.get("spark.app.id")}")
+print(f"App name: {spark.conf.get("spark.app.name")}")
+print(f"App name: {spark.conf.get("spark.default.parallelism", "This has not been set")}")
+
+
 
 # TODO 2c: Try changing spark.sql.shuffle.partitions at runtime
 # Does it work? Add a comment explaining what happens.
-
-# Your code here
+spark.conf.set("spark.sql.shuffle.partitions", "100")
+#It works since it can be applied to transactions done after this point
 
 
 # =============================================================================
@@ -82,22 +85,23 @@ print(f"Shuffle partitions: {spark.conf.get("spark.sql.shuffle.partitions")}")  
 print("\n=== Task 3: getOrCreate() Behavior ===")
 
 # TODO 3a: Create another reference using getOrCreate with a DIFFERENT app name
-spark2 = None  # Replace with SparkSession.builder.appName("DifferentName").getOrCreate()
+spark2 = SparkSession.builder.appName("DifferentName").getOrCreate()
 
 
 # TODO 3b: Check which app name is actually used
-# print(f"spark app name: {spark.sparkContext.appName}")
-# print(f"spark2 app name: {spark2.sparkContext.appName}")
+print(f"spark app name: {spark.sparkContext.appName}")
+print(f"spark2 app name: {spark2.sparkContext.appName}")
 
 
 # TODO 3c: Are spark and spark2 the same object? Check with 'is' operator
-
+spark_bool = (spark is spark2)
+print(f"Both spark sessions are the same: {spark_bool}")
 
 # TODO 3d: EXPLAIN IN A COMMENT: Why does getOrCreate() behave this way?
 # Your explanation:
-#
-#
-#
+# get or create got the spark context used by spark for spark2 since it was already created
+# you can do this since you can have multiple spark sessions defined
+# but you cant have multiple spark contexts defined, so it is shared
 
 
 # =============================================================================
@@ -107,12 +111,15 @@ spark2 = None  # Replace with SparkSession.builder.appName("DifferentName").getO
 print("\n=== Task 4: Cleanup ===")
 
 # TODO 4a: Stop the SparkSession properly
-# HINT: Use spark.stop()
+spark.stop()
 
 
 # TODO 4b: Verify the session has stopped
 # HINT: Check spark.sparkContext._jsc.sc().isStopped() before stopping
-
+if SparkSession.getActiveSession() is not None:
+    spark2.stop()
+else:
+    print("This executes if session has been stopped already")
 
 # =============================================================================
 # STRETCH GOALS (Optional)
