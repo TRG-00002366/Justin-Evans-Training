@@ -1,4 +1,5 @@
 from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, sum as spark_sum
 
 def main():
     # Step 1: Create SparkSession
@@ -36,10 +37,21 @@ def main():
     df = spark.createDataFrame(sales_data, ["product", "category", "price", "quantity"])
 
 
+
     df.show()
 
+    print(f"Record Count: {df.count()}")
 
-    print(df.select(sum("quantity")).collect())
+    df = df.withColumn("revenue", col("price")*col("quantity"))
+
+    df.show()
+
+    df.filter(col("category") == "Electronics").show()
+
+    df.groupBy("category").agg(
+        spark_sum(col("revenue")).alias("total_revenue")
+    ).show()
+    
 
 
 
