@@ -156,3 +156,11 @@ Raw Inventory Data:
 
 
 --- Challenge: String Parsing ---
++------------+------------+------------+
+|product_name|        size|       color|
++------------+------------+------------+
+|    Widget A| Size: Large| Color: Blue|
+|    Gadget B|Size: Medium|  Color: Red|
+|      Tool C| Size: Small|Color: Green|
++------------+------------+------------+
+

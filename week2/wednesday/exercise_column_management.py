@@ -189,20 +189,26 @@ clean_inventory.show()
 print("\n--- Challenge: String Parsing ---")
 
 # Product descriptions
-# descriptions = spark.createDataFrame([
-#     ("Widget A - Size: Large, Color: Blue"),
-#     ("Gadget B - Size: Medium, Color: Red"),
-#     ("Tool C - Size: Small, Color: Green")
-# ], ["description"])
+descriptions = spark.createDataFrame([
+    ("Widget A - Size: Large, Color: Blue",),
+    ("Gadget B - Size: Medium, Color: Red",),
+    ("Tool C - Size: Small, Color: Green",)
+], ["description"])
 
 # TODO 6a: Extract just the product name (before the dash)
 
+description_extracted = descriptions.withColumn("product_name", split(col("description"), " - ")[0]) \
+    .withColumn("other_data", split(col("description"), " - ")[1])
 
 # TODO 6b: Extract the size value
 
+description_extracted = description_extracted.withColumn("size", split(col("other_data"), ", ")[0]) \
+    .withColumn("color", split(col("other_data"), ", ")[1]) \
+    .drop("other_data", "description")
 
 # TODO 6c: Extract the color value
 
+description_extracted.show()
 
 # =============================================================================
 # CLEANUP
