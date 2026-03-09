@@ -1,0 +1,23 @@
+![Empty List Displayed](./Screenshots/empty-topic-list.png)
+
+==================================================
+KAFKA CONNECTION VERIFICATION
+==================================================
+
+Attempting to connect to Kafka...
+----------------------------------------
+Connected to Kafka cluster!
+Topics found: 0
+
+----------------------------------------
+Broker Information
+----------------------------------------
+Brokers (1):
+  - Broker bootstrap-0: localhost:9092
+
+==================================================
+VERIFICATION COMPLETE - Kafka is ready!
+
+
+
+![Kafka Dashboard](./Screenshots/kafka-ui-dashboard.png)
