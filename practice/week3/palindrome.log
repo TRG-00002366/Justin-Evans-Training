@@ -1,0 +1,28 @@
+INFO:__main__:[INFO] The word string is not a palindrome
+INFO:__main__:[INFO] The word racecar is a palindrome
+INFO:__main__:[INFO] The word string is not a palindrome
+INFO:__main__:[INFO] The word racecar is a palindrome
+INFO:__main__:[INFO] The word string is not a palindrome
+INFO:__main__:[INFO] The word racecar is a palindrome
+INFO:__main__:[INFO] The word string is not a palindrome
+INFO:__main__:[INFO] The word racecar is a palindrome
+INFO:__main__:The word string is not a palindrome
+INFO:__main__:The word racecar is a palindrome
+INFO:__main__:The word string is not a palindrome
+INFO:__main__:The word racecar is a palindrome
+INFO:__main__:The word string is not a palindrome
+INFO:__main__:The word racecar is a palindrome
+INFO:__main__:The word string is not a palindrome
+INFO:__main__:The word racecar is a palindrome
+INFO:__main__:The word string is not a palindrome
+INFO:__main__:The word racecar is a palindrome
+ERROR:__main__:Something unexpected broke the function
+INFO:__main__:The word string is not a palindrome
+INFO:__main__:The word racecar is a palindrome
+ERROR:__main__:Something unexpected broke the function
+INFO:__main__:The word string is not a palindrome
+INFO:__main__:The word racecar is a palindrome
+ERROR:__main__:Something unexpected broke the function
+INFO:__main__:The word race is not a palindrome
+INFO:__main__:The word racecar is a palindrome
+INFO:__main__:The word hello is not a palindrome

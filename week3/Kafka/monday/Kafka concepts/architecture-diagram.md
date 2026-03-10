@@ -1,0 +1,1 @@
+![Kafka Architecture](./Screenshots/Kafka-Architecture.png)

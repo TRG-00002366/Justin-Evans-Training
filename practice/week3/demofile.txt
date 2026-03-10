@@ -1,0 +1,7 @@
+This will be a quick
+test to check.
+The functionality
+
+
+
+of python file operations
