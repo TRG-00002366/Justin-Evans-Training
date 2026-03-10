@@ -1,0 +1,14 @@
+Topic: user-signups	TopicId: 4cRSd8pZSi6GI5WkIUxs4A	PartitionCount: 2	ReplicationFactor: 1	Configs: 
+	Topic: user-signups	Partition: 0	Leader: 1	Replicas: 1	Isr: 1
+	Topic: user-signups	Partition: 1	Leader: 1	Replicas: 1	Isr: 1
+Topic: page-views	TopicId: hwpbEi5ISLShGDgdi_Idnw	PartitionCount: 6	ReplicationFactor: 1	Configs: 
+	Topic: page-views	Partition: 0	Leader: 1	Replicas: 1	Isr: 1
+	Topic: page-views	Partition: 1	Leader: 1	Replicas: 1	Isr: 1
+	Topic: page-views	Partition: 2	Leader: 1	Replicas: 1	Isr: 1
+	Topic: page-views	Partition: 3	Leader: 1	Replicas: 1	Isr: 1
+	Topic: page-views	Partition: 4	Leader: 1	Replicas: 1	Isr: 1
+	Topic: page-views	Partition: 5	Leader: 1	Replicas: 1	Isr: 1
+Topic: purchases	TopicId: 2FPRcUEoS2-_yqlspnt8qQ	PartitionCount: 3	ReplicationFactor: 1	Configs: 
+	Topic: purchases	Partition: 0	Leader: 1	Replicas: 1	Isr: 1
+	Topic: purchases	Partition: 1	Leader: 1	Replicas: 1	Isr: 1
+	Topic: purchases	Partition: 2	Leader: 1	Replicas: 1	Isr: 1
