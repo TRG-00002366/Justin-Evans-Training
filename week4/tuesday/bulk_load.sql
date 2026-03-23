@@ -1,0 +1,130 @@
+USE DATABASE JUSTIN_DEV_DB;
+USE SCHEMA BRONZE;
+
+
+-- Create CSV file format
+CREATE OR REPLACE FILE FORMAT MY_CSV_FORMAT
+    TYPE = 'CSV'
+    FIELD_DELIMITER = ','
+    SKIP_HEADER = 1
+    NULL_IF = ('NULL', 'null', '', 'N/A')
+    FIELD_OPTIONALLY_ENCLOSED_BY = '"'
+    TRIM_SPACE = TRUE
+    ERROR_ON_COLUMN_COUNT_MISMATCH = FALSE
+    COMMENT = 'Standard CSV format for product data';
+
+-- Create JSON file format
+CREATE OR REPLACE FILE FORMAT MY_JSON_FORMAT
+    TYPE = 'JSON'
+    STRIP_OUTER_ARRAY = TRUE
+    COMMENT = 'JSON format for event data';
+
+-- Verify formats
+SHOW FILE FORMATS;
+
+-- Create stage for CSV files
+CREATE OR REPLACE STAGE CSV_LOAD_STAGE
+    FILE_FORMAT = MY_CSV_FORMAT
+    COMMENT = 'Staging for loading CSV product data';
+
+CREATE OR REPLACE STAGE JSON_LOAD_STAGE
+    FILE_FORMAT = MY_JSON_FORMAT
+    COMMENT = 'Staging for loading JSON event data';
+
+SHOW STAGES;
+
+
+LIST @CSV_LOAD_STAGE;
+LIST @JSON_LOAD_STAGE;
+
+
+CREATE OR REPLACE TABLE RAW_PRODUCTS (
+    product_id STRING,
+    product_name STRING,
+    category STRING,
+    price STRING,
+    quantity_sold STRING,
+    sale_date STRING,
+    created_at TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP()
+);
+
+-- CREATE OR REPLACE TABLE RAW_PRODUCTS (
+--     raw_data VARIANT,
+--     created_at TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP()
+-- );
+    
+
+
+-- Load CSV data
+COPY INTO RAW_PRODUCTS (product_id, product_name, category, price, quantity_sold, sale_date)
+FROM @CSV_LOAD_STAGE
+FILE_FORMAT = (FORMAT_NAME = MY_CSV_FORMAT)
+ON_ERROR = 'CONTINUE'
+PURGE = FALSE;
+
+-- Check the results
+SELECT * FROM BRONZE.RAW_PRODUCTS;
+SELECT * FROM RAW_PRODUCTS;
+SELECT COUNT(*) AS rows_loaded FROM RAW_PRODUCTS;
+
+
+CREATE OR REPLACE TABLE RAW_CUSTOMER_EVENTS (
+    raw_data VARIANT,
+    created_at TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP()
+);
+
+
+
+-- Load JSON data
+COPY INTO RAW_CUSTOMER_EVENTS (raw_data)
+FROM @JSON_LOAD_STAGE
+FILE_FORMAT = (FORMAT_NAME = MY_JSON_FORMAT)
+ON_ERROR = 'CONTINUE';
+
+-- Check results
+SELECT * FROM RAW_CUSTOMER_EVENTS;
+
+
+-- Check CSV load history
+SELECT 
+    TABLE_NAME,
+    FILE_NAME,
+    STATUS,
+    ROW_PARSED,
+    ROW_COUNT,
+    ERROR_COUNT,
+    FIRST_ERROR_MESSAGE
+FROM TABLE(INFORMATION_SCHEMA.COPY_HISTORY(
+    TABLE_NAME => 'RAW_PRODUCTS',
+    START_TIME => DATEADD('hour', -1, CURRENT_TIMESTAMP())
+));
+
+
+-- Check JSON load history
+SELECT 
+    TABLE_NAME,
+    FILE_NAME,
+    STATUS,
+    ROW_PARSED,
+    ROW_COUNT,
+    ERROR_COUNT
+FROM TABLE(INFORMATION_SCHEMA.COPY_HISTORY(
+    TABLE_NAME => 'RAW_CUSTOMER_EVENTS',
+    START_TIME => DATEADD('hour', -1, CURRENT_TIMESTAMP())
+));
+
+
+SELECT 
+    raw_data:type::STRING AS event_type,
+    COUNT(*) AS event_count
+FROM RAW_CUSTOMER_EVENTS
+GROUP BY event_type;
+
+
+
+SELECT SUM(price * quantity_sold)
+FROM RAW_PRODUCTS;
+
+SELECT 
+    SUM(raw_data:properties:total::DECIMAL(12,2)) AS total_cost,
+FROM RAW_CUSTOMER_EVENTS;
